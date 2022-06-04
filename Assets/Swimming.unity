@@ -152,12 +152,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d43912e0d5c42634e8136f6c8ce6371e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishPrefab: {fileID: 1733855665772604, guid: b0489fdb6d64a4a4ba8e194e561d60cd, type: 3}
-  numFish: 500
+  fishPrefab:
+  - {fileID: 1733855665772604, guid: b0489fdb6d64a4a4ba8e194e561d60cd, type: 3}
+  - {fileID: 1318662798089844, guid: 06a4036ceebb544e494c30d599b9d2c1, type: 3}
+  numFish: 150
   allFish: []
   swinLimits: {x: 5, y: 5, z: 5}
   minSpeed: 0.2
   maxSpeed: 1.65
+  neighbourDistance: 1
+  rotationSpeed: 1.67
 --- !u!4 &45161410
 Transform:
   m_ObjectHideFlags: 0
