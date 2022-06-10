@@ -8,6 +8,7 @@ public class FlockManager : MonoBehaviour
     public int numFish = 20;//numero de peixes na cena
     public GameObject[] allFish;//array para guardar os peixes presentes na cena
     public Vector3 swinLimits = new Vector3(5, 5, 5);//define os limites de spawn dos peixes
+    public Vector3 goalPos;
 
     [Header("Configurações do Cardume")]
     [Range(0.0f, 5.0f)]//Velocidade minima do peixe
@@ -35,6 +36,13 @@ public class FlockManager : MonoBehaviour
 
     void Update()
     {
-        
+        goalPos = this.transform.position;
+        if (Random.Range(0, 100) < 10)
+            goalPos = this.transform.position + new Vector3(Random.Range(-swinLimits.x,
+                                    swinLimits.x),
+                            Random.Range(-swinLimits.y,
+                                    swinLimits.y),
+                            Random.Range(-swinLimits.z,
+                                    swinLimits.z));
     }
 }

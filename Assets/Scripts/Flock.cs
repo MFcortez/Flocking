@@ -6,6 +6,7 @@ public class Flock : MonoBehaviour
 {
     public FlockManager manager;
     float speed;//guarda a velocidade do peixe
+    bool turning = false;
 
     void Start()
     {
@@ -15,10 +16,39 @@ public class Flock : MonoBehaviour
 
     void Update()
     {
-        ApplyRules();//Chama o método que faz o movimento de grupo e evita colisão
+        Bounds b = new Bounds(manager.transform.position, manager.swinLimits * 2);
+        RaycastHit hit = new RaycastHit();
+        Vector3 direction = manager.transform.position - transform.position;
+        if (!b.Contains(transform.position))
+        {
+            turning = true;
+            direction = manager.transform.position - transform.position;
+        }
+        else if (Physics.Raycast(transform.position, this.transform.forward * 50, out hit))
+        {
+            turning = true;
+            direction = Vector3.Reflect(this.transform.forward, hit.normal);
+        }
+        else
+        {
+            turning = false;
+        }
+        if (turning)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation,
+            Quaternion.LookRotation(direction),
+            manager.rotationSpeed * Time.deltaTime);
+        }
+        else
+        {
+            if (Random.Range(0, 100) < 10)
+                speed = Random.Range(manager.minSpeed,
+                manager.maxSpeed);
+            if (Random.Range(0, 100) < 20)
+                ApplyRules();//Chama o método que faz o movimento de grupo e evita colisão
+        }
         transform.Translate(0, 0, Time.deltaTime * speed); //Move o peixe no eixo Z
     }
-
     void ApplyRules()
     {
         GameObject[] gos;
@@ -53,8 +83,8 @@ public class Flock : MonoBehaviour
         }
         if(groupSize > 0)//caso o grupo tenha pelo menos um peixe
         {
-            vCenter /= groupSize;//Faz a média do centro do grupo
-            gSpeed /= groupSize;//Faz a média da velocidade do grupo
+            vCenter = vCenter/groupSize + (manager.goalPos - transform.position);//Faz a média do centro do grupo
+            speed = gSpeed/groupSize;//Faz a média da velocidade do grupo
 
             Vector3 direction = (vCenter - vAvoid) - transform.position;//Calcula a diferença entre direção do movimento do grupo e a posição do peixe
             if(direction != Vector3.zero)//verifica se o peixe está respeitando a direção do grupo, e executa caso não esteja
