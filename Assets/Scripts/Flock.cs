@@ -16,36 +16,42 @@ public class Flock : MonoBehaviour
 
     void Update()
     {
-        Bounds b = new Bounds(manager.transform.position, manager.swinLimits * 2);
+        Bounds b = new Bounds(manager.transform.position, manager.swinLimits * 2); //define os limites de movimentação do objeto
         RaycastHit hit = new RaycastHit();
-        Vector3 direction = manager.transform.position - transform.position;
-        if (!b.Contains(transform.position))
+        Vector3 direction = manager.transform.position - transform.position;//define a direção do FlockManager para com o Flock
+        if (!b.Contains(transform.position))//Caso o objeto esteja fora dos limites
         {
             turning = true;
-            direction = manager.transform.position - transform.position;
+            direction = manager.transform.position - transform.position;//define a direção do FlockManager para com o Flock
         }
-        else if (Physics.Raycast(transform.position, this.transform.forward * 50, out hit))
+        else if (Physics.Raycast(transform.position, this.transform.forward * 50, out hit))//Caso o raycast colida com um objeto a até 50 unidades de distancia
         {
             turning = true;
-            direction = Vector3.Reflect(this.transform.forward, hit.normal);
+            direction = Vector3.Reflect(this.transform.forward, hit.normal);//define a direção do objeto colidido para com o Flock
         }
         else
         {
             turning = false;
         }
-        if (turning)
+        if (turning) //Caso esteja fora dos limites ou tenha algum objeto a frente
         {
             transform.rotation = Quaternion.Slerp(transform.rotation,
-            Quaternion.LookRotation(direction),
-            manager.rotationSpeed * Time.deltaTime);
+                    Quaternion.LookRotation(direction),
+                    manager.rotationSpeed * Time.deltaTime);//Rotaciona o Flock para evitar a colisão
         }
         else
         {
             if (Random.Range(0, 100) < 10)
+            {
                 speed = Random.Range(manager.minSpeed,
-                manager.maxSpeed);
+                        manager.maxSpeed);//define a speed aleatoriamente com base nos limites previamente estabelecidos
+            }
+
             if (Random.Range(0, 100) < 20)
+            {
                 ApplyRules();//Chama o método que faz o movimento de grupo e evita colisão
+            }
+
         }
         transform.Translate(0, 0, Time.deltaTime * speed); //Move o peixe no eixo Z
     }
